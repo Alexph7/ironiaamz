@@ -40,14 +40,12 @@ let lastUpdateId = 0;
 async function normalizarLinkAmazon(
     url
 ) {
-
     if (
         url.includes("amzn.to") ||
         url.includes("amzlink.to") ||
         url.includes("a.co") ||
         url.includes("link.amazon")
     ) {
-
         const response =
             await fetch(
                 url,
@@ -66,11 +64,9 @@ async function normalizarLinkAmazon(
                 }
             );
 
-
         url =
             response.url;
     }
-
 
     url =
         url
@@ -83,10 +79,8 @@ async function normalizarLinkAmazon(
                 "&"
             );
 
-
     return url;
 }
-
 
 /*
  * Extrai ASIN da URL já resolvida.
@@ -94,22 +88,18 @@ async function normalizarLinkAmazon(
 function extrairAsin(
     url
 ) {
-
     const match =
         url.match(
             /\/(?:dp|gp\/product)\/([A-Z0-9]{10})/i
         );
 
-
     if (!match) {
         return null;
     }
 
-
     return match[1]
         .toUpperCase();
 }
-
 
 /*
  * Processa uma mensagem recebida
@@ -124,11 +114,9 @@ async function processarUpdateTelegram(
         update.message?.caption ||
         "";
 
-
     if (!msg) {
         return;
     }
-
 
     /*
      * Procura URLs dentro da mensagem.
@@ -138,11 +126,9 @@ async function processarUpdateTelegram(
             /https?:\/\/[^\s]+/g
         );
 
-
     if (!links) {
         return;
     }
-
 
     /*
      * Pega o primeiro link
@@ -158,17 +144,14 @@ async function processarUpdateTelegram(
                 link.includes("a.co")
         );
 
-
     if (!linkOriginal) {
         return;
     }
-
 
     console.log(
         "\nLINK RECEBIDO:",
         linkOriginal
     );
-
 
     /*
      * Se for encurtado,
@@ -179,12 +162,10 @@ async function processarUpdateTelegram(
             linkOriginal
         );
 
-
     console.log(
         "LINK RESOLVIDO:",
         link
     );
-
 
     /*
      * Extrai o ASIN.
@@ -194,9 +175,7 @@ async function processarUpdateTelegram(
             link
         );
 
-
     if (!asin) {
-
         console.log(
             "ASIN NÃO ENCONTRADO"
         );
@@ -204,12 +183,10 @@ async function processarUpdateTelegram(
         return;
     }
 
-
     console.log(
         "ASIN:",
         asin
     );
-
 
     /*
      * Daqui para baixo:
@@ -220,9 +197,7 @@ async function processarUpdateTelegram(
             asin
         );
 
-
     if (!item) {
-
         console.log(
             "PRODUTO NÃO RETORNADO PELA API"
         );
@@ -230,17 +205,14 @@ async function processarUpdateTelegram(
         return;
     }
 
-
     const produto =
         normalizarProdutoAmazon(
             item
         );
 
-
     console.log(
         "\nPRODUTO NORMALIZADO:\n"
     );
-
 
     console.dir(
         produto,
@@ -249,7 +221,6 @@ async function processarUpdateTelegram(
             colors: true
         }
     );
-
 
     const post =
         formatarPostAmazon(
@@ -280,7 +251,6 @@ async function processarUpdateTelegram(
     );
 }
 
-
 /*
  * Busca novas mensagens
  * do Telegram.
@@ -302,10 +272,8 @@ async function ouvirTelegram() {
             }
         );
 
-
     const dados =
         await resposta.json();
-
 
     if (!dados.ok) {
 
@@ -323,17 +291,14 @@ async function ouvirTelegram() {
         lastUpdateId =
             update.update_id;
 
-
         const tratouBotao =
             await processarBotaoEnviarAmazon(
                 update
             );
 
-
         if (tratouBotao) {
             continue;
         }
-
 
         await processarUpdateTelegram(
             update
