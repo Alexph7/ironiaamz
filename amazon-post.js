@@ -64,7 +64,7 @@ export function formatarPostAmazon(produto) {
 
         `✅ <b>R$${preco}</b>${textoRecorrencia}\n\n` +
 
-        `<b>🔎 ${produto.linkAfiliado}</b>\n\n` +
+        `🔎 ${produto.linkAfiliado}\n\n` +
 
         `#Anúncio`
     );
