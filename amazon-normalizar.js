@@ -27,18 +27,9 @@ export function normalizarProdutoAmazon(
                             ?.amount
                     );
 
-                const condicao =
-                    listing
-                        ?.condition
-                        ?.value;
-
-                return (
-                    Number.isFinite(valor) &&
-                    condicao === "New"
-                );
+                return Number.isFinite(valor);
             }
         );
-
     const escolhida =
         listingsComPreco.reduce(
             (menor, listing) => {
