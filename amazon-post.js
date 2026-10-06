@@ -46,6 +46,14 @@ export function formatarPostAmazon(produto) {
             `${produto.quantidadeMinima}x - ${titulo}`;
     }
 
+    const LIMITE_TITULO = 90;
+
+    if (titulo.length > LIMITE_TITULO) {
+        titulo = titulo
+            .slice(0, LIMITE_TITULO - 3)
+            .replace(/\s+\S*$/, "")
+            .trim() + "...";
+    }
 
     const preco =
         formatarPreco(
@@ -62,10 +70,10 @@ export function formatarPostAmazon(produto) {
     return (
         `${titulo}\n\n` +
 
-        `✅ <b>R$${preco}</b>${textoRecorrencia}\n\n` +
+        `✅ <b>R$${preco}</b>${textoRecorrencia}\n` +
 
         `🔎 ${produto.linkAfiliado}\n\n` +
 
-        `#Anúncio`
+        `#Anúncio #Amazon`
     );
 }
