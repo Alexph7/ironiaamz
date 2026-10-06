@@ -12,48 +12,55 @@ export function normalizarProdutoAmazon(
             ?.listings ??
         [];
 
-    /*
-    * ORDEM DE PRECEDÊNCIA:
-    *
-    * 1. preço de oferta / deal
-    * 2. recorrência
-    * 3. preço normal
-    */
+    /**
+     * Escolhe a listing com o menor preço
+     * entre todas as retornadas pela Amazon.
+     */
+    const listingsComPreco =
+        listings.filter(
+            listing => {
+                const valor =
+                    Number(
+                        listing
+                            ?.price
+                            ?.money
+                            ?.amount
+                    );
 
-    const oferta =
-        listings.find(
-            listing =>
-                listing?.dealDetails &&
-                listing
-                    ?.price
-                    ?.money
-                    ?.amount != null
-        );
-
-    const recorrencia =
-        listings.find(
-            listing =>
-                listing.type ===
-                "SUBSCRIBE_AND_SAVE" &&
-                listing
-                    ?.price
-                    ?.money
-                    ?.amount != null
-        );
-
-    const principal =
-        listings.find(
-            listing =>
-                listing
-                    ?.price
-                    ?.money
-                    ?.amount != null
+                return Number.isFinite(valor);
+            }
         );
 
     const escolhida =
-        oferta ||
-        recorrencia ||
-        principal;
+        listingsComPreco.reduce(
+            (menor, listing) => {
+
+                if (!menor) {
+                    return listing;
+                }
+
+                const precoMenor =
+                    Number(
+                        menor
+                            ?.price
+                            ?.money
+                            ?.amount
+                    );
+
+                const precoAtual =
+                    Number(
+                        listing
+                            ?.price
+                            ?.money
+                            ?.amount
+                    );
+
+                return precoAtual < precoMenor
+                    ? listing
+                    : menor;
+            },
+            null
+        );
 
     const precoAtual =
         escolhida
@@ -106,7 +113,8 @@ export function normalizarProdutoAmazon(
                 : null,
 
         ehRecorrencia:
-            escolhida === recorrencia,
+            escolhida?.type ===
+            "SUBSCRIBE_AND_SAVE",
 
         quantidadeMinima:
             quantidadeMinima,
