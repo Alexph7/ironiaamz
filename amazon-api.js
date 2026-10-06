@@ -104,6 +104,9 @@ export async function buscarItemAmazon(
                 itemIdType:
                     "ASIN",
 
+                condition:
+                    "New",
+
                 marketplace:
                     "www.amazon.com.br",
 
