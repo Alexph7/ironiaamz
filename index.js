@@ -21,6 +21,10 @@ import {
     criarBannerAmazon
 } from "./amazon-banner.js";
 
+import {
+    gerarLinkCurtoAmazon
+} from "./amazon-link-curto.js";
+
 const TOKEN =
     process.env.TELEGRAM_BOT_TOKEN;
 
@@ -209,6 +213,20 @@ async function processarUpdateTelegram(
         normalizarProdutoAmazon(
             item
         );
+
+
+    /**
+     * Tenta gerar link curto oficial
+     * da Amazon pelo SiteStripe.
+     *
+     * Se falhar, mantém o link afiliado
+     * original.
+     */
+    produto.linkAfiliado =
+        await gerarLinkCurtoAmazon(
+            produto.linkAfiliado
+        );
+
 
     console.log(
         "\nPRODUTO NORMALIZADO:\n"
