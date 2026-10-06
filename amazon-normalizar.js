@@ -27,7 +27,15 @@ export function normalizarProdutoAmazon(
                             ?.amount
                     );
 
-                return Number.isFinite(valor);
+                const condicao =
+                    listing
+                        ?.condition
+                        ?.value;
+
+                return (
+                    Number.isFinite(valor) &&
+                    condicao === "New"
+                );
             }
         );
 
