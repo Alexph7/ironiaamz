@@ -1,11 +1,94 @@
 import "dotenv/config";
 
+import {
+    existsSync,
+    readFileSync,
+    writeFileSync
+} from "node:fs";
+
+import {
+    fileURLToPath
+} from "node:url";
+
 const AMAZON_COOKIE =
     process.env.AMAZON_COOKIE;
 
 const MARKETPLACE_ID =
     "526970";
 
+const ARQUIVO_CACHE =
+    fileURLToPath(
+        new URL(
+            "./links-curtos-amazon.json",
+            import.meta.url
+        )
+    );
+
+
+let cacheLinks = {};
+
+
+if (existsSync(ARQUIVO_CACHE)) {
+
+    try {
+
+        cacheLinks =
+            JSON.parse(
+                readFileSync(
+                    ARQUIVO_CACHE,
+                    "utf8"
+                )
+            );
+
+    } catch (erro) {
+
+        console.log(
+            "LINK CURTO: ERRO AO LER CACHE:",
+            erro.message
+        );
+
+        cacheLinks = {};
+    }
+}
+
+
+function salvarCache() {
+
+    try {
+
+        writeFileSync(
+            ARQUIVO_CACHE,
+            JSON.stringify(
+                cacheLinks,
+                null,
+                2
+            ),
+            "utf8"
+        );
+
+    } catch (erro) {
+
+        console.log(
+            "LINK CURTO: ERRO AO SALVAR CACHE:",
+            erro.message
+        );
+    }
+}
+
+
+function extrairAsinDoLink(
+    url
+) {
+
+    const match =
+        url.match(
+            /\/(?:dp|gp\/product)\/([A-Z0-9]{10})/i
+        );
+
+    return match
+        ? match[1].toUpperCase()
+        : null;
+}
 
 export async function gerarLinkCurtoAmazon(
     longUrl
@@ -13,6 +96,25 @@ export async function gerarLinkCurtoAmazon(
 
     if (!longUrl) {
         return null;
+    }
+
+    const asin =
+        extrairAsinDoLink(
+            longUrl
+        );
+
+
+    if (
+        asin &&
+        cacheLinks[asin]
+    ) {
+
+        console.log(
+            "LINK CURTO: CACHE:",
+            cacheLinks[asin]
+        );
+
+        return cacheLinks[asin];
     }
 
     /**
@@ -94,6 +196,18 @@ export async function gerarLinkCurtoAmazon(
                 "LINK CURTO:",
                 dados.shortUrl
             );
+
+            if (asin) {
+
+                cacheLinks[asin] =
+                    dados.shortUrl;
+                salvarCache();
+
+                console.log(
+                    "LINK CURTO: SALVO NO CACHE:",
+                    asin
+                );
+            }
 
             return dados.shortUrl;
         }
