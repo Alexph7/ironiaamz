@@ -30,7 +30,7 @@ export function normalizarProdutoAmazon(
                 return Number.isFinite(valor);
             }
         );
-        
+
     const escolhida =
         listingsComPreco.reduce(
             (menor, listing) => {
