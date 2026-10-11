@@ -147,11 +147,6 @@ export async function gerarLinkCurtoAmazon(
             MARKETPLACE_ID
         );
 
-        url.searchParams.set(
-            "storeId",
-            "cupomferta-20"
-        );
-
         const resposta =
             await fetch(
                 url,
@@ -181,16 +176,9 @@ export async function gerarLinkCurtoAmazon(
 
         if (!resposta.ok) {
 
-            const corpo = await resposta.text();
-
             console.log(
                 "LINK CURTO: HTTP",
                 resposta.status
-            );
-
-            console.log(
-                "LINK CURTO: RESPOSTA AMAZON:",
-                corpo.slice(0, 1500)
             );
 
             return longUrl;
