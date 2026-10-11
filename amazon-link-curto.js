@@ -148,7 +148,7 @@ export async function gerarLinkCurtoAmazon(
         );
 
         url.searchParams.set(
-            "tag",
+            "storeId",
             "cupomferta-20"
         );
 
