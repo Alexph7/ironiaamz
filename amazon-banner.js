@@ -6,7 +6,7 @@ const ALTURA_BANNER = 900;
 
 // ===== LOGO =====
 const CAMINHO_LOGO = "./logo.png"; // caminho da sua logo
-const TAMANHO_LOGO = 500;          // tamanho da logo (altura e largura máximas)
+const TAMANHO_LOGO = 400;          // tamanho da logo (altura e largura máximas)
 const MARGEM_LOGO = 30;            // distância da borda direita e de baixo
 
 // ===== PRODUTO =====
@@ -63,8 +63,8 @@ export async function criarBannerAmazon(imageUrl) {
     const produtoLeft = Math.floor((LARGURA_BANNER - infoProduto.width) / 2);
 
     // Logo no canto inferior direito
-    const logoTop = ALTURA_BANNER - logo.altura - 80;
-    const logoLeft = LARGURA_BANNER - logo.largura - MARGEM_LOGO;
+    const logoTop = ALTURA_BANNER - logo.altura - 50;
+    const logoLeft = LARGURA_BANNER - logo.largura - 20;
 
     const final = await sharp({
         create: {
