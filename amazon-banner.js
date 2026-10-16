@@ -6,7 +6,7 @@ const ALTURA_BANNER = 900;
 
 // ===== LOGO =====
 const CAMINHO_LOGO = "./logo.png"; // caminho da sua logo
-const TAMANHO_LOGO = 230;          // tamanho da logo (altura e largura máximas)
+const TAMANHO_LOGO = 500;          // tamanho da logo (altura e largura máximas)
 const MARGEM_LOGO = 30;            // distância da borda direita e de baixo
 
 // ===== PRODUTO =====
