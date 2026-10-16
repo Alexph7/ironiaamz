@@ -12,7 +12,7 @@ const MARGEM_LOGO = 30;            // distância da borda direita e de baixo
 // ===== PRODUTO =====
 // Largura em 70% para sobrar espaço no canto da logo
 // e ela não ficar por cima do produto
-const LARGURA_PRODUTO = Math.floor(LARGURA_BANNER * 0.70);
+const LARGURA_PRODUTO = Math.floor(LARGURA_BANNER * 0.84);
 const ALTURA_PRODUTO = Math.floor(ALTURA_BANNER * 0.84);
 
 // A logo é preparada uma vez só e reaproveitada em todos os banners
