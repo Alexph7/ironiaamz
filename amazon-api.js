@@ -119,8 +119,7 @@ export async function buscarItemAmazon(
                     "offersV2.listings.availability",
                     "offersV2.listings.price",
                     "offersV2.listings.merchantInfo",
-                    "offersV2.listings.type",
-                    "offersV2.listings.dealDetails"
+                    "offersV2.listings.type"
                 ]
             })
         }
