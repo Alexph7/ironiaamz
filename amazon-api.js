@@ -137,11 +137,19 @@ export async function buscarItemAmazon(
         );
     }
 
-    return (
+    const item =
         dados
             ?.itemsResult
             ?.items
         ?.[0] ??
-        null
-    );
+        null;
+
+    if (!item) {
+        console.log(
+            "RESPOSTA DA API SEM PRODUTO:",
+            JSON.stringify(dados, null, 2)
+        );
+    }
+
+    return item;
 }
