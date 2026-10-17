@@ -74,6 +74,6 @@ export function formatarPostAmazon(produto) {
 
         `🔎 ${produto.linkAfiliado}\n\n` +
 
-        `#Anúncio * Preço sujeito a alteração`
+        `# anúncio - preço sujeito a alteração`
     );
 }
