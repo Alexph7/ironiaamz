@@ -19,16 +19,6 @@ export function formatarPostAmazon(produto) {
         );
     }
 
-    if (
-        produto.precoAtual === null ||
-        produto.precoAtual === undefined
-    ) {
-        throw new Error(
-            "PRODUTO SEM PREÇO"
-        );
-    }
-
-
     let titulo =
         produto.titulo;
 
@@ -55,10 +45,9 @@ export function formatarPostAmazon(produto) {
             .trim() + "...";
     }
 
-    const preco =
-        formatarPreco(
-            produto.precoAtual
-        );
+    const temPreco =
+        produto.precoAtual !== null &&
+        produto.precoAtual !== undefined;
 
 
     const textoRecorrencia =
@@ -67,10 +56,16 @@ export function formatarPostAmazon(produto) {
             : "";
 
 
+    const linhaPreco =
+        temPreco
+            ? `✅ <b>R$${formatarPreco(produto.precoAtual)}</b>${textoRecorrencia}\n`
+            : "";
+
+
     return (
         `${titulo}\n\n` +
 
-        `✅ <b>R$${preco}</b>${textoRecorrencia}\n` +
+        linhaPreco +
 
         `🔎 ${produto.linkAfiliado}\n\n` +
 

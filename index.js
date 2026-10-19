@@ -106,6 +106,40 @@ function extrairAsin(
 }
 
 /*
+ * Manda um aviso no chat de onde
+ * o link veio, respondendo a mensagem.
+ * Se falhar, só registra no log.
+ */
+async function enviarAvisoOrigem(
+    update,
+    texto
+) {
+    try {
+        await fetch(
+            `https://api.telegram.org/bot${TOKEN}/sendMessage`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    chat_id: update.message.chat.id,
+                    text: texto,
+                    reply_to_message_id: update.message.message_id
+                }),
+                signal: AbortSignal.timeout(15000)
+            }
+        );
+    } catch (erro) {
+        console.log(
+            "ERRO AO ENVIAR AVISO:",
+            erro.message
+        );
+    }
+}
+
+
+/*
  * Processa uma mensagem recebida
  * no Telegram.
  */
@@ -214,6 +248,19 @@ async function processarUpdateTelegram(
             item
         );
 
+    if (produto.precoAtual == null) {
+
+        console.log(
+            "AVISO: API SEM PREÇO, POSTANDO SEM PREÇO"
+        );
+
+        await enviarAvisoOrigem(
+            update,
+            `AVISO ${asin}: a API não mandou preço (` +
+            (produto.disponivel ? "disponível" : "esgotado na API") +
+            `). O post saiu sem preço, confira antes de enviar.`
+        );
+    }
 
     /**
      * Tenta gerar link curto oficial
