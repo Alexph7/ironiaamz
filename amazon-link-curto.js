@@ -10,6 +10,17 @@ import {
     fileURLToPath
 } from "node:url";
 
+import {
+    execFile
+} from "node:child_process";
+
+import {
+    promisify
+} from "node:util";
+
+const execFileAsync =
+    promisify(execFile);
+
 const AMAZON_COOKIE =
     process.env.AMAZON_COOKIE;
 
@@ -147,48 +158,54 @@ export async function gerarLinkCurtoAmazon(
             MARKETPLACE_ID
         );
 
-        const resposta =
-            await fetch(
-                url,
+        /**
+ * Usa o curl em vez do fetch do Node,
+ * porque a Amazon barra o fetch.
+ */
+        const { stdout } =
+            await execFileAsync(
+                "curl",
+                [
+                    "-s",
+                    "--compressed",
+                    "--max-time", "15",
+                    "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154.0.0.0 Safari/537.36",
+                    "-H", `Cookie: ${AMAZON_COOKIE}`,
+                    "-H", "Accept: application/json, text/javascript, */*; q=0.01",
+                    "-H", "Referer: https://www.amazon.com.br/",
+                    "-H", "X-Requested-With: XMLHttpRequest",
+                    "-w", "\n%{http_code}",
+                    url.toString()
+                ],
                 {
-                    method: "GET",
-
-                    headers: {
-                        "Cookie":
-                            AMAZON_COOKIE,
-
-                        "Accept":
-                            "application/json, text/javascript, */*; q=0.01",
-
-                        "User-Agent":
-                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154.0.0.0 Safari/537.36",
-
-                        "Referer":
-                            "https://www.amazon.com.br/",
-
-                        "X-Requested-With":
-                            "XMLHttpRequest"
-                    },
-
-                    signal:
-                        AbortSignal.timeout(
-                            15000
-                        )
+                    maxBuffer:
+                        5 * 1024 * 1024
                 }
             );
 
-        if (!resposta.ok) {
+        const quebra =
+            stdout.lastIndexOf("\n");
+
+        const status =
+            Number(
+                stdout.slice(quebra + 1)
+            );
+
+        const corpo =
+            stdout.slice(0, quebra);
+
+        if (status !== 200) {
 
             console.log(
                 "LINK CURTO: HTTP",
-                resposta.status
+                status
             );
 
             return longUrl;
         }
 
         const dados =
-            await resposta.json();
+            JSON.parse(corpo);
 
         if (
             dados?.isOk === true &&
